@@ -42,17 +42,18 @@ def split_sprite_name(name):
     sprite = sprite[1:]
     return sprite
 
-def angle_of_vectors(vec1,vec2): #need to be modified
-    a,b = vec1
-    c,d = vec2
-
-    dotProduct = a * c + b * d
-    # for three dimensional simply add dotProduct = a*c + b*d  + e*f
-    modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(c * c + d * d)
-    # for three dimensional simply add modOfVector = math.sqrt( a*a + b*b + e*e)*math.sqrt(c*c + d*d +f*f)
-    if modOfVector1 == 0: modOfVector1 = 1
-    angle = dotProduct / modOfVector1
-    return math.degrees(math.acos(angle))
+#idk why it doesn't work
+#def angle_of_vectors(vec1,vec2): #need to be modified
+#    a,b = vec1
+#    c,d = vec2
+#
+#    dotProduct = a * c + b * d
+#    # for three dimensional simply add dotProduct = a*c + b*d  + e*f
+#    modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(c * c + d * d)
+#    # for three dimensional simply add modOfVector = math.sqrt( a*a + b*b + e*e)*math.sqrt(c*c + d*d +f*f)
+#    if modOfVector1 == 0: modOfVector1 = 1
+#    angle = dotProduct / modOfVector1
+#    return math.degrees(math.acos(angle))
 
 def angle_of_vector(vec2):
     a,b = 1,0

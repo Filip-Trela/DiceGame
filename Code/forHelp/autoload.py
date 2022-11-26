@@ -9,4 +9,4 @@ collision_sprites = pygame.sprite.Group()
 #image autoloads
 all_images = []
 
-vec = (0,0)
+local_pos_target = (0,0)

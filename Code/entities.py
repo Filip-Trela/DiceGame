@@ -79,13 +79,18 @@ class Player(Entity):
                     self.mov_vec.y = 0
 
     def arm_handler(self):
-        autol.vec = self.rect.center + vector(20,0)
+        vector_to_norm= vector(pygame.mouse.get_pos()) - vector(autol.local_pos_target)
+        self.arm_angle =angle_of_vector(vector_to_norm.normalize()) if vector_to_norm != (0,0) else vector()
+        self.arm_pos = self.rect.center + vector(self.arm_lenght,0).rotate(-self.arm_angle)
+
+
 
 
     def update(self,dt):
         self.x_axis_movement(dt)
         self.y_axis_movement(dt)
         self.arm_handler()
+        self.gun.update(dt)
 
 
 

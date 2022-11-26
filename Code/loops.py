@@ -36,7 +36,7 @@ class Loops:
 
     def display_handler(self):
         pygame.display.get_surface().fill((255,255,255))
-        self.camera.mouse_depend_movement(self.player.rect.center)
+        autol.local_pos_target= self.camera.mouse_depend_movement(self.player.rect.center)
 
     def update_handler(self,dt):
         all_sprites.update(dt)
