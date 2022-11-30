@@ -9,10 +9,11 @@ from HUD import HUD
 
 class Loops:
     def __init__(self):
-        self.hud = HUD()
+
 
         self.player = Player((70,-32))
         self.camera = Camera(all_sprites, self.player.rect.center)
+        self.hud = HUD(self.player)
 
 
         #temporary level #####################################
@@ -47,4 +48,4 @@ class Loops:
 
     def update_handler(self):
         all_sprites.update()
-        self.hud.update(self.player.health_now)
+        self.hud.update()

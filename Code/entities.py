@@ -4,7 +4,6 @@ from objects import Gun, Dice
 from Code.forHelp import autoload as autol
 from pygame.math import Vector2 as vector
 from Code.forHelp.helpers import *
-
 import settings
 
 
@@ -53,6 +52,9 @@ class Player(Entity):
         #gun vars
         self.gun = Gun(self.rect.center, self)
 
+        #cards inventory
+        card_inventory = 0
+
     def input(self):
         self.input_vec.x = inputHandler(pg.K_d) - inputHandler(pg.K_a)
         if inputHandler(pg.K_w):
@@ -63,10 +65,10 @@ class Player(Entity):
         if inputHandler(pg.K_q):
             Dice(self.arm_pos,self.arm_angle, self)
 
-#testing
+        #testing
         if inputHandler(pg.K_o) and self.health_now>0: self.health_now -= 1
         elif inputHandler(pg.K_i) and self.health_now < 100: self.health_now += 1
-#testing end
+        #testing end
 
 
     def x_axis_movement(self):
@@ -87,7 +89,6 @@ class Player(Entity):
         self.mov_vec.y += self.gravity
         self.rect.centery += self.mov_vec.y
         self.y_axis_collision()
-
     def y_axis_collision(self):
         for sprite in autol.collision_sprites:
             #TODO change rect into collision rect when colliding with world, but y axis
@@ -119,7 +120,6 @@ class Player(Entity):
 
         self.in_air_fps -=1
 
-        #print(autol.player_health)
 
 
 

@@ -2,11 +2,12 @@ import pygame as pg
 from forHelp import autoload as autol
 from settings import *
 from pygame.math import Vector2 as vector
-from entities import Player
 
 
 class HUD:
-    def __init__(self):
+    def __init__(self,player):
+
+        self.player = player
 
         #healthbar part
         self.scale_health = 2
@@ -34,7 +35,7 @@ class HUD:
         blit_surface.blit(self.health_img, self.healthbar_pos)
         blit_surface.blit(self.healthbar_img, self.healthbar_pos)
 
-    def update(self,player_health):
-        self.h_line_now = self.h_line_one * player_health
+    def update(self):
+        self.h_line_now = self.h_line_one * self.player.health_now
 
 

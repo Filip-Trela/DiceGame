@@ -49,7 +49,6 @@ class Gun(pg.sprite.Sprite):
                          self.image.get_height()/2- self.blit_sprite.get_height()/2))
 
 
-
 class Dice(pg.sprite.Sprite):
     def __init__(self, start_pos, direction, operator):
         super().__init__()
@@ -59,7 +58,7 @@ class Dice(pg.sprite.Sprite):
         self.sprite_org.set_colorkey(COLORKEY)
         self.sprite = self.sprite_org
 
-        self.alpha = 120
+        self.alpha = 130
 
 
         self.image = pg.Surface((20,20))
@@ -106,7 +105,7 @@ class Dice(pg.sprite.Sprite):
         self.rotate()
         self.collide_handler()
 
-
         self.rect.x += self.mov_var.x
         self.mov_var.y += self.gravity
         self.rect.y += self.mov_var.y
+
