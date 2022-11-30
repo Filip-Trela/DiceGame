@@ -10,3 +10,4 @@ collision_sprites = pygame.sprite.Group()
 all_images = []
 
 local_pos_target = (0,0)
+

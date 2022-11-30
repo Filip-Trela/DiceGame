@@ -4,29 +4,29 @@ from settings import *
 from loops import Loops
 
 
+#important todos
 
 
 pygame.init()
-screen = pygame.display.set_mode(WINDOWS_SIZE)
+screen = pygame.display.set_mode(WINDOWS_SIZE ) #flags= FLAGS
+blit_surface = pg.Surface(BLIT_SIZE)
 pygame.display.set_caption("Dicey")
 clock = pygame.time.Clock()
 
+
 loops = Loops()
-next_time = time.time()
-dt = 0
 
 
 
 while True:
-    dt = time.time() - next_time
-    dt*=60
-    next_time = time.time()
 
     loops.input_handler()
-    loops.update_handler(dt)
-    loops.display_handler()
+    loops.update_handler()
+    loops.display_handler(blit_surface)
 
     pygame.display.flip()
     clock.tick(FPS)
+
+
 
 

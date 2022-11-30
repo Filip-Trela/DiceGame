@@ -42,18 +42,7 @@ def split_sprite_name(name):
     sprite = sprite[1:]
     return sprite
 
-#idk why it doesn't work
-#def angle_of_vectors(vec1,vec2): #need to be modified
-#    a,b = vec1
-#    c,d = vec2
-#
-#    dotProduct = a * c + b * d
-#    # for three dimensional simply add dotProduct = a*c + b*d  + e*f
-#    modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(c * c + d * d)
-#    # for three dimensional simply add modOfVector = math.sqrt( a*a + b*b + e*e)*math.sqrt(c*c + d*d +f*f)
-#    if modOfVector1 == 0: modOfVector1 = 1
-#    angle = dotProduct / modOfVector1
-#    return math.degrees(math.acos(angle))
+
 
 def angle_of_vector(vec2):
     a,b = 1,0
@@ -109,47 +98,66 @@ class Camera:
     '''
     Basic layout of how cameras will work
     '''
-    #TODO new following target camera movement, layer camera, layer following camera
+    #TODO new layer camera, layer following camera
     #TODO more smooth movement
     def __init__(self,sprite_group, start_target):
         self.camera_sprites = sprite_group #only for pygame sprites
         self.offset = pygame.math.Vector2()
-        self.win_size = pygame.display.get_window_size()
-        self.step = self.win_size[0]/100
+        self.max_dis_mouse = 0.4
 
-        self.x, self.y = start_target
-        self.x= self.x - self.win_size[0]/2
-        self.y =self.y - self.win_size[1]/2
+    def clipped_movement(self,target_position,blit_surface):
 
-        self.max_dis_mouse = 1.3
-
-    def clipped_movement(self,target_position):
+        #blit must bust a surface
         self.x, self.y = target_position
-        target_local_pos = (target_position[0] - self.x + pygame.display.get_window_size()[0]/2,\
-                            target_position[1] - self.y + pygame.display.get_window_size()[1]/2)
 
-        self.x= self.x - self.win_size[0]/2
-        self.y =self.y - self.win_size[1]/2
+        self.x= int(self.x - blit_surface.get_size()[0]/2)
+        self.y =int(self.y - blit_surface.get_size()[1]/2)
 
         for sprite in self.camera_sprites:
-            pygame.display.get_surface().blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
+            blit_surface.blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
 
 
+        target_local_pos = (pg.display.get_surface().get_size()[0]/2,pg.display.get_surface().get_size()[1]/2)
         return target_local_pos
 
 
-    def mouse_depend_movement(self,target_position):
+    def mouse_depend_movement(self,target_position,blit_surface):
+        scale = pg.display.get_surface().get_size()[0] / blit_surface.get_size()[0] #1.6
+
+
         self.x, self.y = target_position
-        self.x = int(self.x - self.win_size[0] + pygame.mouse.get_pos()[0] - mouse_local_center_pos()[0]/self.max_dis_mouse)
-        self.y = int(self.y - self.win_size[1] + pygame.mouse.get_pos()[1] - mouse_local_center_pos()[1]/self.max_dis_mouse)
 
+        self.x = int(self.x - blit_surface.get_size()[0]/2 \
+                      + mouse_local_center_pos()[0]/ scale* self.max_dis_mouse)
+        self.y = int(self.y - blit_surface.get_size()[1]/2 \
+                      + mouse_local_center_pos()[1]/ scale* self.max_dis_mouse)
 
-        #it is not perfect calculation, but thanks to ignoring .0 nums,
-        # we can be sure that to win size 4000,3000 it will work good
-        target_local_pos = (int(target_position[0] - self.x + pygame.display.get_window_size()[0] / 100000), \
-                            int(target_position[1] - self.y + pygame.display.get_window_size()[1] / 100000))
 
         for sprite in self.camera_sprites:
-            pygame.display.get_surface().blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
+            blit_surface.blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
+
+        #nie jest perfekto, brakowac moze 1pixela, ale jest w kurwe zajebiscie
+        target_local_pos = (round(pg.display.get_surface().get_size()[0]/2- mouse_local_center_pos()[0] *self.max_dis_mouse) , \
+                            round(pg.display.get_surface().get_size()[1]/2)- mouse_local_center_pos()[1] *self.max_dis_mouse)
         return target_local_pos
 
+
+
+
+
+
+
+
+
+#idk why it doesn't work
+#def angle_of_vectors(vec1,vec2): #need to be modified
+#    a,b = vec1
+#    c,d = vec2
+#
+#    dotProduct = a * c + b * d
+#    # for three dimensional simply add dotProduct = a*c + b*d  + e*f
+#    modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(c * c + d * d)
+#    # for three dimensional simply add modOfVector = math.sqrt( a*a + b*b + e*e)*math.sqrt(c*c + d*d +f*f)
+#    if modOfVector1 == 0: modOfVector1 = 1
+#    angle = dotProduct / modOfVector1
+#    return math.degrees(math.acos(angle))
