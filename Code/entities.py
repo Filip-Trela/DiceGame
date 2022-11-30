@@ -53,7 +53,8 @@ class Player(Entity):
         self.gun = Gun(self.rect.center, self)
 
         #cards inventory
-        card_inventory = 0
+        self.card_inventory = [] #there will be smt
+        self.card_number = 0
 
     def input(self):
         self.input_vec.x = inputHandler(pg.K_d) - inputHandler(pg.K_a)
@@ -69,6 +70,11 @@ class Player(Entity):
         if inputHandler(pg.K_o) and self.health_now>0: self.health_now -= 1
         elif inputHandler(pg.K_i) and self.health_now < 100: self.health_now += 1
         #testing end
+
+        if mouse_input_handler((1,0,0)) and self.card_inventory != []:
+            self.gun.shoot(self.card_inventory[self.card_number])
+            self.card_inventory = list(x for num,x in enumerate(self.card_inventory) if num != self.card_number)
+
 
 
     def x_axis_movement(self):
@@ -120,6 +126,7 @@ class Player(Entity):
 
         self.in_air_fps -=1
 
+        print(self.card_inventory)
 
 
 

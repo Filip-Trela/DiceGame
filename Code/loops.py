@@ -12,6 +12,9 @@ class Loops:
 
 
         self.player = Player((70,-32))
+        autol.player = self.player
+        Card_Blueprint((300,450))
+        Card_Blueprint((350, 450))
         self.camera = Camera(all_sprites, self.player.rect.center)
         self.hud = HUD(self.player)
 

@@ -12,3 +12,4 @@ all_images = []
 local_pos_target = (0,0)
 
 player_max_health = 100
+player = None
