@@ -11,6 +11,8 @@ import settings
 class Entity(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.health_max = 100
+        self.health_now = 100
     def update(self,dt):
         pass
 
@@ -44,8 +46,9 @@ class Player(Entity):
         self.arm_lenght = 40
         self.arm_angle = 0
 
-
-        #inventory variables
+        #statistics
+        self.health_max = autol.player_max_health
+        self.health_now = 100
 
         #gun vars
         self.gun = Gun(self.rect.center, self)
@@ -60,8 +63,10 @@ class Player(Entity):
         if inputHandler(pg.K_q):
             Dice(self.arm_pos,self.arm_angle, self)
 
-
-
+#testing
+        if inputHandler(pg.K_o) and self.health_now>0: self.health_now -= 1
+        elif inputHandler(pg.K_i) and self.health_now < 100: self.health_now += 1
+#testing end
 
 
     def x_axis_movement(self):
@@ -113,6 +118,9 @@ class Player(Entity):
         self.gun.update()
 
         self.in_air_fps -=1
+
+        #print(autol.player_health)
+
 
 
 

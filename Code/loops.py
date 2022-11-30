@@ -5,9 +5,12 @@ from enviroment import *
 from dev_room import room
 from objects import *
 from settings import *
+from HUD import HUD
 
 class Loops:
     def __init__(self):
+        self.hud = HUD()
+
         self.player = Player((70,-32))
         self.camera = Camera(all_sprites, self.player.rect.center)
 
@@ -37,8 +40,11 @@ class Loops:
         blit_surface.fill((255,255,255))
         autol.local_pos_target= self.camera.mouse_depend_movement(self.player.rect.center,blit_surface)
 
+        self.hud.display(blit_surface)
         pg.display.get_surface().blit(pg.transform.scale(blit_surface, pg.display.get_window_size()),(0,0))
+
 
 
     def update_handler(self):
         all_sprites.update()
+        self.hud.update(self.player.health_now)
