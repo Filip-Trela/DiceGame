@@ -25,17 +25,65 @@ class HUD:
 
 
 
+        self.inventoryHUD_img = pg.Surface((BLIT_SIZE[0], BLIT_SIZE[1]/2))
+        self.inventoryHUD_img.fill((255,255,255))
+        self.inventoryHUD_img.set_colorkey((COLORKEY))
+        self.rotated_mouse = 0
+        self.cards_scale = 4
+        #TODO add this cycling through cards, its working with self.player
 
 
 
 
+    def set_hud_img(self):
+        self.inventoryHUD_img = pg.Surface((BLIT_SIZE[0], BLIT_SIZE[1]/2))
+        self.inventoryHUD_img.fill((255,255,255))
+        self.inventoryHUD_img.set_colorkey((COLORKEY))
+
+    def update(self):
+        self.h_line_now = self.h_line_one * self.player.health_now
+        self.shuffle_cards()
+        self.rotated_mouse += 1
 
     def display(self,blit_surface):
         self.health_img = pg.transform.scale(self.health_img, (self.h_line_now, self.healthbar_img.get_height()))
         blit_surface.blit(self.health_img, self.healthbar_pos)
         blit_surface.blit(self.healthbar_img, self.healthbar_pos)
 
-    def update(self):
-        self.h_line_now = self.h_line_one * self.player.health_now
+        self.set_hud_img()
+        self.show_shuffle_cards()
+        blit_surface.blit(self.inventoryHUD_img, (0, BLIT_SIZE[1] / 2))
 
 
+
+
+    def shuffle_cards(self):
+        self.all_cards = self.player.card_inventory
+        self.num_cards = len(self.all_cards)
+
+        self.center = (BLIT_SIZE[0]/2, BLIT_SIZE[1]/2)
+
+        self.degree_for_one = 360/self.num_cards if self.num_cards !=0 else 0
+
+
+        self.from_center = vector(BLIT_SIZE[0]/3, 0)
+
+
+
+
+
+
+    def show_shuffle_cards(self):
+        #fake 3d rotating
+        #TODO when made more, do it with z layer based on y position,in center there will be some pointer or smth
+        for card_number,card in enumerate(self.all_cards):
+            card_half_size = vector(card.image.get_width() * self.cards_scale / 2, card.image.get_height() * self.cards_scale / 2)
+
+            rotated_vec = self.from_center.rotate(self.degree_for_one * (card_number+1)+ self.rotated_mouse)
+
+            self.inventoryHUD_img.blit(pg.transform.scale(card.image, \
+                    (card.image.get_width()* self.cards_scale, card.image.get_height()* self.cards_scale)),\
+                    #image and its size handling
+
+                    vector(self.center) + vector(rotated_vec[0],rotated_vec[1]/8)- card_half_size)
+                    #blit position handling

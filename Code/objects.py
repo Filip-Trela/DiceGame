@@ -15,7 +15,7 @@ class Gun(pg.sprite.Sprite):
         super().__init__()
         autol.all_sprites.add(self)
 
-        self.scale =2
+        self.scale =1.5
 
         self.org_sprite = pygame.image.load('../Jpgs/rewolwer.png')
         self.org_sprite = pg.transform.scale(self.org_sprite,\
@@ -27,7 +27,19 @@ class Gun(pg.sprite.Sprite):
         self.image = pg.Surface((pg.display.get_window_size()[0]*1.5,pg.display.get_window_size()[1]*1.5))
         self.image.fill((255,255,255))
         self.image.set_colorkey((255,255,255))
-        self.rect = self.image.get_rect(center = start_pos)
+        self.rect = self.image.get_rect(center = start_pos) #basically gun center
+
+        self.muzzle_pos = vector(20, -5)
+        self.muzzle_pos_global = vector(0,0)
+        self.muzzle_pos_local = vector(0,0)
+        self.raycast_line_global = ((),()) #TODO something ehere
+        self.raycast_line_local = ((),())
+        self.raycast_lenght = 700
+
+        self.shoot_fps = 4
+        self.shooting = 0
+
+
 
     def set_place_image(self):
         self.image = pg.Surface((pg.display.get_window_size()[0]*1.5,pg.display.get_window_size()[1]*1.5))
@@ -35,6 +47,7 @@ class Gun(pg.sprite.Sprite):
         self.image.set_colorkey(COLORKEY)
 
     def rotate_handler(self):
+        #todo make this crazzy move toward rotating like in mafia city clone
         if 90<self.operator.arm_angle<270:
             self.blit_sprite = pg.transform.rotate(pg.transform.flip(self.org_sprite,0,1),self.operator.arm_angle)
             #TODO add muzzle positions
@@ -42,15 +55,67 @@ class Gun(pg.sprite.Sprite):
             self.blit_sprite = pg.transform.rotate(self.org_sprite,self.operator.arm_angle)
 
     def shoot(self,card):
-        card.shooted(self.pos, self.operator.arm_angle, self, self.operator)
+        self.raycasting(card.hit_func)
+        self.shooting = self.shoot_fps
+        #card.shooted(self.pos, self.operator.arm_angle, self, self.operator)
+
+#todo possible that raycasting will be in card and visualization
+    def muzzle_position_handler(self):
+        #physics
+        self.muzzle_pos_global = self.rect.center + self.muzzle_pos.rotate(self.operator.arm_angle)
+        self.muzzle_pos_global = (int(self.muzzle_pos_global[0]),int(self.muzzle_pos_global[1]))
+
+        self.raycast_line_global = (self.muzzle_pos_global,\
+                             self.muzzle_pos_global + vector(self.raycast_lenght,0).rotate(-self.operator.arm_angle))
+
+
+        #visualization
+        if 90<self.operator.arm_angle<270:
+            self.muzzle_pos_local = vector(self.image.get_rect().width / 2, self.image.get_rect().height / 2) \
+                                    + vector(self.muzzle_pos[0],-self.muzzle_pos[1] ).rotate(-self.operator.arm_angle)
+
+        else:
+            self.muzzle_pos_local = vector(self.image.get_rect().width/2,self.image.get_rect().height/2)\
+                            + self.muzzle_pos.rotate(-self.operator.arm_angle)
+
+
+        self.raycast_line_local = (self.muzzle_pos_local,\
+                                   self.muzzle_pos_local + vector(self.raycast_lenght, 0).rotate(-self.operator.arm_angle))
+
+    def raycasting(self, func):
+        #todo later add hurtboxs and otrhers
+        list = []
+        collisions = []
+        self.start_ray_vis = ()
+        self.end_ray_vis = ()
+        for block in autol.collision_sprites: #and hurt sprites
+            clipped = block.rect.clipline(self.raycast_line_global)
+            if clipped != ():
+                list.append(clipped)
+                collisions.append(block)
+        #list good raycast global good, locals bad
+        self.start_ray_vis = vector(self.raycast_line_local[0])
+        if list:
+            self.end_ray_vis = list[0][0] - vector(self.raycast_line_global[0]) + vector(self.muzzle_pos_local)
+            func(collisions[0])
+        else: self.end_ray_vis = vector(self.raycast_line_local[1])
+
+    def shooting_visualization(self):
+        if self.shooting:
+            pg.draw.line(self.image, (0, 0, 0), self.start_ray_vis, self.end_ray_vis, 2)
+            self.shooting -= 1
 
     def update(self):
         self.set_place_image()
         self.rect.center =self.operator.arm_pos
         self.rotate_handler()
+        self.muzzle_position_handler()
+        self.shooting_visualization()
+
         self.pos = (self.image.get_width() / 2 - self.blit_sprite.get_width() / 2, \
                     self.image.get_height() / 2 - self.blit_sprite.get_height() / 2)
         self.image.blit(self.blit_sprite,self.pos)
+
 
 
 class Dice(pg.sprite.Sprite):
@@ -132,8 +197,15 @@ class Card_Blueprint(pg.sprite.Sprite):
 
         self.mov_vec = vector(0,1)
 
-    def shooted(self, start_pos, angle, gun, player):
-        pass #TODO functionality
+        self.gun_muzzle_global   = vector(0,0)
+        self.gun_muzzle_local    = vector(0,0)
+        self.raycast_line_global = vector(0,0)
+        self.raycast_line_local  = vector(0,0)
+
+        self.lenght_raycast = 700
+
+    def hit_func(self, hitted_object):
+        print("card used woah lessgo")
 
     def collide_handler(self):
         #collision with player

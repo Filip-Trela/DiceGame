@@ -5,11 +5,11 @@ from loops import Loops
 
 
 
-#important todos
+#important todos:
 
 
 pygame.init()
-screen = pygame.display.set_mode(WINDOWS_SIZE ) #flags= FLAGS
+screen = pygame.display.set_mode(WINDOWS_SIZE, FLAGS) #flags= FLAGS
 blit_surface = pg.Surface(BLIT_SIZE)
 pygame.display.set_caption("Dicey")
 clock = pygame.time.Clock()

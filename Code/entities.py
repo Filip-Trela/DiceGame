@@ -4,7 +4,8 @@ from objects import Gun, Dice
 from Code.forHelp import autoload as autol
 from pygame.math import Vector2 as vector
 from Code.forHelp.helpers import *
-import settings
+from settings import *
+
 
 
 class Entity(pg.sprite.Sprite):
@@ -23,8 +24,12 @@ class Player(Entity):
         autol.all_sprites.add(self)
         #import variable
 
-        self.image = pg.Surface((48,96))
-        self.image.fill((255,0,0))
+        self.image = pg.image.load('../Jpgs/player.png') #48,96
+        self.image.set_colorkey(COLORKEY)
+        self.image = pg.transform.scale(self.image, (self.image.get_width()*2, self.image.get_height()*2))
+
+
+        #all rectangles
         self.rect = self.image.get_rect(topleft = start_pos)
 
         #input variables
@@ -75,8 +80,6 @@ class Player(Entity):
             self.gun.shoot(self.card_inventory[self.card_number])
             self.card_inventory = list(x for num,x in enumerate(self.card_inventory) if num != self.card_number)
 
-
-
     def x_axis_movement(self):
         self.mov_vec.x = move_towards(self.mov_vec.x,self.acceleration,self.max_speed * self.input_vec.x)
         self.rect.centerx += int(self.mov_vec.x)
@@ -125,8 +128,6 @@ class Player(Entity):
         self.gun.update()
 
         self.in_air_fps -=1
-
-        print(self.card_inventory)
 
 
 

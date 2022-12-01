@@ -124,14 +124,11 @@ class Camera:
     def mouse_depend_movement(self,target_position,blit_surface):
         scale = pg.display.get_surface().get_size()[0] / blit_surface.get_size()[0] #1.6
 
-
         self.x, self.y = target_position
-
         self.x = int(self.x - blit_surface.get_size()[0]/2 \
                       + mouse_local_center_pos()[0]/ scale* self.max_dis_mouse)
         self.y = int(self.y - blit_surface.get_size()[1]/2 \
                       + mouse_local_center_pos()[1]/ scale* self.max_dis_mouse)
-
 
         for sprite in self.camera_sprites:
             blit_surface.blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
