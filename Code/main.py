@@ -3,13 +3,17 @@ import pygame
 from settings import *
 from loops import Loops
 
+"""
+Version 00.018
+"""
 
-
-#important todos:
+#important todo
+#enemy for later, slowing down time when dice thrown
+#spadlo do 55 fps'ow, jebac na ten moment, optymalizacja jest na pozniej
 
 
 pygame.init()
-screen = pygame.display.set_mode(WINDOWS_SIZE, FLAGS) #flags= FLAGS
+screen = pygame.display.set_mode(WINDOWS_SIZE) #flags= FLAGS
 blit_surface = pg.Surface(BLIT_SIZE)
 pygame.display.set_caption("Dicey")
 clock = pygame.time.Clock()
@@ -27,6 +31,8 @@ while True:
 
     pygame.display.flip()
     clock.tick(FPS)
+
+
 
 
 

@@ -114,7 +114,8 @@ class Camera:
         self.y =int(self.y - blit_surface.get_size()[1]/2)
 
         for sprite in self.camera_sprites:
-            blit_surface.blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
+            blit_surface.blit(sprite.sprite_img, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y)\
+                              + sprite.offsprite_pos)
 
 
         target_local_pos = (pg.display.get_surface().get_size()[0]/2,pg.display.get_surface().get_size()[1]/2)
@@ -131,7 +132,8 @@ class Camera:
                       + mouse_local_center_pos()[1]/ scale* self.max_dis_mouse)
 
         for sprite in self.camera_sprites:
-            blit_surface.blit(sprite.image, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y))
+            blit_surface.blit(sprite.sprite_img, sprite.rect.topleft - pygame.math.Vector2(self.x, self.y)\
+                              + sprite.offsprite_pos)
 
         #nie jest perfekto, brakowac moze 1pixela, ale jest w kurwe zajebiscie
         target_local_pos = (round(pg.display.get_surface().get_size()[0]/2- mouse_local_center_pos()[0] *self.max_dis_mouse) , \
@@ -141,20 +143,13 @@ class Camera:
 
 
 
+class NewSprite(pg.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pg.Surface((10,10)) #for collision size
+        #self.rect  for steering collision
+        self.sprite_img = pg.image.load('../Jpgs/player.png') #for sprite image
+        self.offsprite_pos = pg.math.Vector2(0,0) #for its offset from rect topleft
 
 
 
-
-
-#idk why it doesn't work
-#def angle_of_vectors(vec1,vec2): #need to be modified
-#    a,b = vec1
-#    c,d = vec2
-#
-#    dotProduct = a * c + b * d
-#    # for three dimensional simply add dotProduct = a*c + b*d  + e*f
-#    modOfVector1 = math.sqrt(a * a + b * b) * math.sqrt(c * c + d * d)
-#    # for three dimensional simply add modOfVector = math.sqrt( a*a + b*b + e*e)*math.sqrt(c*c + d*d +f*f)
-#    if modOfVector1 == 0: modOfVector1 = 1
-#    angle = dotProduct / modOfVector1
-#    return math.degrees(math.acos(angle))

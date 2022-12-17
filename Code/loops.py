@@ -9,16 +9,16 @@ from HUD import HUD
 
 class Loops:
     def __init__(self):
+        self.scroll_y = 0
 
 
-        self.player = Player((70,-32))
+        self.player = Player((200,300))
         autol.player = self.player
-        Card_Blueprint((300,450))
-        Card_Blueprint((325, 450))
-        Card_Blueprint((400, 450))
-        Card_Blueprint((350, 450))
+        for x in range(14): #14 should be enough
+            Card_Blueprint((200,300))
         self.camera = Camera(all_sprites, self.player.rect.center)
         self.hud = HUD(self.player)
+        PotatoEnemy((300,300))
 
 
         #temporary level #####################################
@@ -28,9 +28,10 @@ class Loops:
                 y = row_num * 64
                 if coll == 'x':
                     Block((x,y))
-        ######################################################
+        #temporary level #####################################
 
     def input_handler(self):
+        #main
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -40,10 +41,17 @@ class Loops:
                 pygame.quit()
                 sys.exit()
 
+        #hud
+            self.hud.input()
+            if event.type == pygame.MOUSEWHEEL:
+                self.scroll_y = event.y
+
+        #in game
+        if not self.hud.inventory_hud_active:
             self.player.input()
 
     def display_handler(self,blit_surface):
-        blit_surface.fill((255,255,255))
+        blit_surface.fill((100,100,100))
         autol.local_pos_target= self.camera.mouse_depend_movement(self.player.rect.center,blit_surface)
 
         self.hud.display(blit_surface)
@@ -52,5 +60,7 @@ class Loops:
 
 
     def update_handler(self):
-        all_sprites.update()
-        self.hud.update()
+        if not self.hud.inventory_hud_active:
+            all_sprites.update()
+        self.hud.update(self.scroll_y)
+        self.scroll_y = move_towards(self.scroll_y, 0.1, 0)
