@@ -1,0 +1,21 @@
+added:
+dice
+card, "puting card into gun", using card in your gun
+hud that can shuffle cards
+
+
+More of a devlog:
+* raycasting had a problem, it was a list with all collision sorted by x position of a global (0,0), now it is a
+  sorted by distance to muzzle list, raycasting works as it should
+* new sprite class for collision help
+* hud inventory updating and bliting only when it has a permission
+* making a raycast global calculations and local visualization of it. blitin' a visualization into big gun surface to have it all
+  in one sprite
+
+
+
+
+
+TO DO:
+when cards are in hud they are not updating, they behaving like images
+puting cards from hud into gun
